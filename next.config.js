@@ -2,6 +2,9 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    fontLoaders: [
+      { loader: '@next/font/local', options: {} },
+    ],
   },
 }
 

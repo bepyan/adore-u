@@ -1,5 +1,6 @@
 'use client'
 
+import dayjs from 'dayjs'
 import { useState } from 'react'
 
 import HeroCard from '~/components/HeroCard'
@@ -30,7 +31,15 @@ export default function Home() {
         </HeroCard>
 
         <HeroCard show={fullCalender}>
-          <h2 className='sticky top-0 text-lg font-bold'>날짜</h2>
+          <div className='flex items-center justify-center'>
+            {dayjs().localeData().monthsShort(dayjs())}
+          </div>
+
+          <div className='grid grid-cols-7 text-center text-sm'>
+            {dayjs.weekdaysShort().map(day => (
+              <div key={day} className='text-zinc-700'>{day}</div>
+            ))}
+          </div>
         </HeroCard>
       </div>
 

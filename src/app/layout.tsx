@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={cn(
           fontSpoqa.variable,
-          'min-h-screen w-full font-sans bg-zinc-100 text-slate-900 antialiased',
+          'min-h-screen w-full bg-zinc-100 font-sans text-slate-900 antialiased',
         )}
       >
         {children}

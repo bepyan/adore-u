@@ -2,6 +2,11 @@ module.exports = {
   extends: ['next/core-web-vitals', '@antfu', 'plugin:tailwindcss/recommended'],
   plugins: ['unused-imports', 'simple-import-sort'],
   parser: '@typescript-eslint/parser',
+  settings: {
+    tailwindcss: {
+      callees: ['cn'],
+    },
+  },
   rules: {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',

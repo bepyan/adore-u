@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import React from 'react'
 import { useMeasure } from 'react-use'
 
@@ -27,10 +27,29 @@ export default function CalenderPage() {
   const [calenderRef, { height: calenderHeight }] = useMeasure<HTMLDivElement>()
   const eventListHeight = window.innerHeight - calenderHeight
 
+  const controls = useAnimationControls()
+
+  const handleNext = async () => {
+    goNextMonth()
+
+    await controls.start({
+      x: 300,
+      opacity: 0.5,
+      transition: { duration: 0 },
+    })
+
+    await controls.start({
+      x: 0,
+      opacity: 1,
+      transition: { ease: 'easeInOut', duration: 0.15 },
+    })
+  }
+
   return (
     <>
       {/* calender */}
       <div ref={calenderRef} className='fixed inset-x-0 top-0 z-10 mx-auto mt-11 max-w-screen-sm bg-zinc-50 standalone:mt-20'>
+        {/* calender header */}
         <div className='flex w-full items-end justify-center py-4'>
           <div className='flex items-center gap-2'>
             <Icons.caretLeft
@@ -44,15 +63,28 @@ export default function CalenderPage() {
             </span>
             <Icons.caretRight
               className='h-6 w-6 text-zinc-500 active:text-zinc-700'
-              onClick={goNextMonth}
+              onClick={handleNext}
             />
           </div>
-
           <div className='absolute right-4 text-xs' onClick={goToday}>
             오늘
           </div>
         </div>
-        <div className='grid grid-cols-7 text-center text-sm'>
+        {/* calender content */}
+        <motion.div
+          className='grid grid-cols-7 text-center text-sm'
+          animate={controls}
+        // drag="x"
+        // dragConstraints={{ left: -50, right: 50 }}
+        // style={{ touchAction: 'none' }}
+        // dragElastic={0.1}
+        // onDrag={(e, info) => {
+        //   if (info.offset.x > 45)
+        //     goNextMonth()
+        //   else if (info.offset.x <= -45)
+        //     goPrevMonth()
+        // }}
+        >
           {dayjs.weekdaysShort().map(day => (
             <div key={day} className='py-2 text-zinc-600'>{day}</div>
           ))}
@@ -91,7 +123,7 @@ export default function CalenderPage() {
               </div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
 
       {calenderHeight && <div

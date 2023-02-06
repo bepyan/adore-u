@@ -15,7 +15,7 @@ export const renderDateDuration = (from: dayjs.Dayjs, to: dayjs.Dayjs) => {
   const dateDiff = from.diff(to, 'day') + 1
 
   if (dateDiff === 1)
-    return '오늘'
+    return '이날은'
 
   return `${dateDiff}일 후`
 }

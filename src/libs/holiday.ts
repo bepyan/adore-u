@@ -29,14 +29,24 @@ export const eventList = [
     description: '연인들이 서로의 마음을 다시 한번 확인하는 뜻에서 키스를 나누는 날입니다.',
   },
   {
+    name: '와인데이',
+    date: dayjs().month(9).date(14),
+    description: '연인들이 와인을 함께 마시며 행복한 시간을 보내는 날입니다.',
+  },
+  {
     name: '빼빼로데이',
     date: dayjs().month(10).date(11),
     description: '소중한 사람에게 빼뺴로를 선물해주는 날입니다.',
   },
   {
+    name: '크리스마스 이브',
+    date: dayjs().month(11).date(24),
+    description: '미리 Marry Christmas!',
+  },
+  {
     name: '크리스마스',
     date: dayjs().month(11).date(25),
-    description: 'Marry Merry Christmas!',
+    description: 'Marry Christmas!',
   },
 ]
 
@@ -48,7 +58,7 @@ export const allEventDayList = eventList
     }))
   })
   .flatMap((event) => {
-    return [99, 199, 299, 999].map(diff => ({
+    return [0, 99, 199, 499, 999].map(diff => ({
       ...event,
       targetDate: event.date.subtract(diff, 'day'),
     }))

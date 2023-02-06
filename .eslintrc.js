@@ -22,5 +22,6 @@ module.exports = {
         groups: [['^\\u0000'], ['^@?\\w'], ['^~/'], ['^\\.']],
       },
     ],
+    'import/order': 'off',
   },
 }

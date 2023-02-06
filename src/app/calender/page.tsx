@@ -1,50 +1,31 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useMeasure } from 'react-use'
 
 import { Icons } from '~/components/ui/Icons'
 import dayjs, { renderDateDuration } from '~/libs/day'
-import { allEventDayList } from '~/libs/holiday'
 import { cn } from '~/libs/utils'
 
+import { useCalender } from './useCalender'
+
 export default function CalenderPage() {
-  const today = dayjs()
-  const [showingMonth, setShowingMonth] = React.useState<dayjs.Dayjs>(today)
-  const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(today)
+  const {
+    today,
+    showingMonth,
+    selectedDate,
+    monthStartBlankCnt,
+    targetEventList,
+    activeTargetEventList,
+    setSelectedDate,
+    goToday,
+    goPrevMonth,
+    goNextMonth,
+  } = useCalender()
 
   const [calenderRef, { height: calenderHeight }] = useMeasure<HTMLDivElement>()
   const eventListHeight = window.innerHeight - calenderHeight
-
-  const monthStartBlankCnt = (dayjs(showingMonth).date(0).day() + 1) % 7
-  const monthDateList = [...Array(showingMonth.daysInMonth())].map((_, i) => showingMonth.date(i + 1))
-
-  const targetEventList = monthDateList.map((_, i) => {
-    const itemDate = showingMonth.date(i + 1) as dayjs.Dayjs
-
-    const eventList = allEventDayList.filter(({ targetDate }) => targetDate.isSame(itemDate, 'date'))
-
-    return {
-      itemDate,
-      eventList,
-    }
-  })
-  const activeTargetEventList = targetEventList.filter(({ eventList }) => eventList.length)
-
-  useEffect(() => {
-    const isBeforeToday = showingMonth.isBefore(today)
-    setSelectedDate(isBeforeToday ? activeTargetEventList.at(-1)!.itemDate : activeTargetEventList.at(0)!.itemDate)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showingMonth])
-
-  const goTargetMonth = (targetDate: dayjs.Dayjs) => {
-    setShowingMonth(targetDate)
-  }
-
-  const goToday = () => goTargetMonth(today)
-  const goPrevMonth = () => goTargetMonth(showingMonth.month(showingMonth.month() - 1))
-  const goNextMonth = () => goTargetMonth(showingMonth.month(showingMonth.month() + 1))
 
   return (
     <>

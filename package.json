@@ -15,7 +15,8 @@
     "framer-motion": "^9.0.1",
     "lucide-react": "^0.108.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-use": "^17.4.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.1",

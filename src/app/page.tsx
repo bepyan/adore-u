@@ -1,11 +1,10 @@
 'use client'
 
-import dayjs from 'dayjs'
 import { useState } from 'react'
 
 import HeroCard from '~/components/HeroCard'
-import { PageHeader } from '~/components/PageHeader'
 import Button from '~/components/ui/Button'
+import dayjs from '~/libs/day'
 
 export default function Home() {
   const [fullLanding, setFullLanding] = useState(false)
@@ -22,9 +21,7 @@ export default function Home() {
   }
 
   return (
-    <main className='min-h-min'>
-      <PageHeader />
-
+    <div className='min-h-min'>
       <div className='container flex flex-col gap-4'>
         <HeroCard show={fullLanding}>
           <h2 className='sticky top-0 text-lg font-bold'>추앙하다</h2>
@@ -54,6 +51,6 @@ export default function Home() {
           </Button>
         </div>
       </div>
-    </main>
+    </div>
   )
 }

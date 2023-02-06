@@ -1,6 +1,8 @@
 'use client'
 
+import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect } from 'react'
+import { useMeasure } from 'react-use'
 
 import { Icons } from '~/components/ui/Icons'
 import dayjs, { renderDateDuration } from '~/libs/day'
@@ -11,6 +13,9 @@ export default function CalenderPage() {
   const today = dayjs()
   const [showingMonth, setShowingMonth] = React.useState<dayjs.Dayjs>(today)
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(today)
+
+  const [calenderRef, { height: calenderHeight }] = useMeasure<HTMLDivElement>()
+  const eventListHeight = window.innerHeight - calenderHeight
 
   const monthStartBlankCnt = (dayjs(showingMonth).date(0).day() + 1) % 7
   const monthDateList = [...Array(showingMonth.daysInMonth())].map((_, i) => showingMonth.date(i + 1))
@@ -42,10 +47,9 @@ export default function CalenderPage() {
   const goNextMonth = () => goTargetMonth(showingMonth.month(showingMonth.month() + 1))
 
   return (
-    <main className="min-h-min">
-      <div className='sticky top-0'>
-        <div className='h-8'></div>
-
+    <>
+      {/* calender */}
+      <div ref={calenderRef} className='fixed inset-x-0 top-0 z-10 mx-auto mt-11 max-w-screen-sm bg-zinc-50 standalone:mt-20'>
         <div className='flex w-full items-end justify-center py-4'>
           <div className='flex items-center gap-2'>
             <Icons.caretLeft
@@ -67,7 +71,6 @@ export default function CalenderPage() {
             오늘
           </div>
         </div>
-
         <div className='grid grid-cols-7 text-center text-sm'>
           {dayjs.weekdaysShort().map(day => (
             <div key={day} className='py-2 text-zinc-600'>{day}</div>
@@ -110,27 +113,40 @@ export default function CalenderPage() {
         </div>
       </div>
 
-      <div className='container mt-8 flex flex-col gap-4'>
-        {activeTargetEventList.map(({ itemDate, eventList }) => {
-          return (
-            <div key={itemDate.toString()}>
-              <div className='mb-2 text-sm text-zinc-600'>
-                {itemDate.format('D일 dddd')}
-              </div>
-              {eventList.map(event => (
-                <div key={event.name} className="flex h-20 items-center py-2">
-                  <span className='mr-2 text-sm text-zinc-600'>
-                    {renderDateDuration(event.date, event.targetDate)}
-                  </span>
-                  <span className='text-zinc-900'>
-                    {event.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )
-        })}
+      {calenderHeight && <div
+        className='fixed inset-x-0 z-50 mt-11 h-8 bg-gradient-to-b from-zinc-50 to-transparent standalone:mt-20'
+        style={{ top: calenderHeight }}
+      />}
+      {/* events */}
+      <div
+        className='fixed-div container inset-x-0 mt-11 overflow-auto pt-8 pb-20 standalone:mt-20 '
+        style={{ top: calenderHeight, height: eventListHeight }}
+      >
+        <AnimatePresence>
+          {calenderHeight && (
+            <motion.div className='flex flex-col gap-4' initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {activeTargetEventList.map(({ itemDate, eventList }) => {
+                return (
+                  <div key={itemDate.toString()}>
+                    <div className='mb-2 text-sm text-zinc-600'>
+                      {itemDate.format('D일 dddd')}
+                    </div>
+                    {eventList.map(event => (
+                      <div key={event.name} className="flex h-20 items-center py-2">
+                        <span className='mr-2 text-sm text-zinc-600'>
+                          {renderDateDuration(event.date, event.targetDate)}
+                        </span>
+                        <span className='text-zinc-900'>
+                          {event.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
+            </motion.div>)}
+        </AnimatePresence>
       </div>
-    </main>
+    </>
   )
 }

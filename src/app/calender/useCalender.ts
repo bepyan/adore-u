@@ -27,7 +27,6 @@ export const useCalender = () => {
   React.useEffect(() => {
     const isBeforeToday = showingMonth.isBefore(today)
     setSelectedDate(isBeforeToday ? activeTargetEventList.at(-1)!.itemDate : activeTargetEventList.at(0)!.itemDate)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showingMonth])
 
   return {

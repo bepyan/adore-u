@@ -23,5 +23,6 @@ module.exports = {
       },
     ],
     'import/order': 'off',
+    'react-hooks/exhaustive-deps': 'off',
   },
 }

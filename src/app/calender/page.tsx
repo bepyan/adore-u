@@ -6,6 +6,7 @@ import { useMeasure } from 'react-use'
 
 import Button from '~/components/ui/Button'
 import { Icons } from '~/components/ui/Icons'
+import { slideVariant } from '~/libs/animations'
 import dayjs, { renderDateDuration } from '~/libs/day'
 import { cn } from '~/libs/utils'
 
@@ -32,34 +33,14 @@ export default function CalenderPage() {
 
   const handleNext = async () => {
     goNextMonth()
-
-    await controls.start({
-      x: '70%',
-      opacity: 0.5,
-      transition: { duration: 0 },
-    })
-
-    await controls.start({
-      x: 0,
-      opacity: 1,
-      transition: { ease: 'easeInOut', duration: 0.15 },
-    })
+    await controls.start('enter')
+    await controls.start('exit')
   }
 
   const handlePrev = async () => {
     goPrevMonth()
-
-    await controls.start({
-      x: '-70%',
-      opacity: 0.5,
-      transition: { duration: 0 },
-    })
-
-    await controls.start({
-      x: 0,
-      opacity: 1,
-      transition: { ease: 'easeInOut', duration: 0.15 },
-    })
+    await controls.start('enter')
+    await controls.start('exit')
   }
 
   useEffect(() => {
@@ -78,7 +59,7 @@ export default function CalenderPage() {
               className='h-6 w-6 text-zinc-500'
               onClick={handlePrev}
             />
-            <motion.span animate={controls}>
+            <motion.span custom="70%" animate={controls} variants={slideVariant}>
               {showingMonth.isSame(today, 'year')
                 ? showingMonth.format('MM월')
                 : showingMonth.format('YY년 MM월')}
@@ -105,7 +86,9 @@ export default function CalenderPage() {
         >
           <motion.div
             className='z-10 grid grid-cols-7 text-center text-sm'
+            custom="70%"
             animate={controls}
+            variants={slideVariant}
           >
             {dayjs.weekdaysShort().map(day => (
               <div key={day} className='py-2 text-zinc-600'>{day}</div>

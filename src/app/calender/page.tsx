@@ -94,57 +94,58 @@ export default function CalenderPage() {
         </div>
         {/* calender content */}
         <motion.div
-          className='grid grid-cols-7 text-center text-sm'
-          animate={controls}
-        // drag="x"
-        // dragConstraints={{ left: -50, right: 50 }}
-        // style={{ touchAction: 'none' }}
-        // dragElastic={0.1}
-        // onDrag={(e, info) => {
-        //   if (info.offset.x > 45)
-        //     goNextMonth()
-        //   else if (info.offset.x <= -45)
-        //     goPrevMonth()
-        // }}
-        >
-          {dayjs.weekdaysShort().map(day => (
-            <div key={day} className='py-2 text-zinc-600'>{day}</div>
-          ))}
-          {[...Array(monthStartBlankCnt)].map((_, i) => (
-            <div key={i} className="flex h-16 items-center justify-center text-zinc-700">
-              { }
-            </div>
-          ))}
-          {targetEventList.map(({ itemDate, eventList }) => {
-            const isCurrentDate = itemDate.isSame(today, 'D')
-            const isSelectedDate = itemDate.isSame(selectedDate, 'D')
-            const hasEvent = Boolean(eventList.length)
+          onPanEnd={(_, { offset, velocity }) => {
+            const swipe = Math.abs(offset.x) * velocity.x
 
-            return (
-              <div
-                key={itemDate.toString()}
-                className={'flex h-16 flex-col items-center justify-center gap-1 text-zinc-700'}
-                onClick={() => hasEvent && setSelectedDate(itemDate)}
-              >
-                <span
-                  className={cn(
-                    'flex h-6 w-6 items-center justify-center rounded-full text-zinc-300',
-                    isCurrentDate && 'bg-zinc-300 text-zinc-700',
-                    hasEvent && 'text-zinc-700',
-                    isSelectedDate && 'bg-rose-100 text-zinc-700',
-                  )}
-                >
-                  {itemDate.date()}
-                </span>
-                <div className='flex flex-col gap-0.5'>
-                  {eventList.map(event => (
-                    <div key={event.name} className="h-1 w-4 rounded-lg bg-rose-300">
-                    </div>
-                  ))}
-                </div>
+            if (swipe <= -30)
+              handleNext()
+            else if (swipe >= 30)
+              handlePrev()
+          }}
+        >
+          <motion.div
+            className='z-10 grid grid-cols-7 text-center text-sm'
+            animate={controls}
+          >
+            {dayjs.weekdaysShort().map(day => (
+              <div key={day} className='py-2 text-zinc-600'>{day}</div>
+            ))}
+            {[...Array(monthStartBlankCnt)].map((_, i) => (
+              <div key={i} className="flex h-16 items-center justify-center text-zinc-700">
+                { }
               </div>
-            )
-          })}
+            ))}
+            {targetEventList.map(({ itemDate, eventList }) => {
+              const isCurrentDate = itemDate.isSame(today, 'D')
+              const isSelectedDate = itemDate.isSame(selectedDate, 'D')
+              const hasEvent = Boolean(eventList.length)
+
+              return (
+                <div
+                  key={itemDate.toString()}
+                  className={'flex h-16 flex-col items-center justify-center gap-1 text-zinc-700'}
+                  onClick={() => hasEvent && setSelectedDate(itemDate)}
+                >
+                  <span
+                    className={cn(
+                      'flex h-6 w-6 items-center justify-center rounded-full text-zinc-300',
+                      isCurrentDate && 'bg-zinc-300 text-zinc-700',
+                      hasEvent && 'text-zinc-700',
+                      isSelectedDate && 'bg-rose-100 text-zinc-700',
+                    )}
+                  >
+                    {itemDate.date()}
+                  </span>
+                  <div className='flex flex-col gap-0.5'>
+                    {eventList.map(event => (
+                      <div key={event.name} className="h-1 w-4 rounded-lg bg-rose-300">
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </motion.div>
         </motion.div>
       </div>
 

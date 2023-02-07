@@ -58,15 +58,22 @@ export default function CalenderPage() {
     }))
   }
 
-  const slideControls = useAnimationControls()
-  const animateCalender = async (callback: () => void) => {
-    callback()
-    await slideControls.start('enter')
-    await slideControls.start('exit')
+  const calenderControls = useAnimationControls()
+  const animateToday = async () => {
+    const isBeforeToday = goToday()
+    await calenderControls.start(isBeforeToday ? 'rightEnter' : 'leftEnter')
+    await calenderControls.start('animate')
   }
-  const animateToday = () => animateCalender(goToday)
-  const animatePrevMonth = () => animateCalender(goPrevMonth)
-  const animateNextMonth = () => animateCalender(goNextMonth)
+  const animatePrevMonth = async () => {
+    goPrevMonth()
+    await calenderControls.start('leftEnter')
+    await calenderControls.start('animate')
+  }
+  const animateNextMonth = async () => {
+    goNextMonth()
+    await calenderControls.start('rightEnter')
+    await calenderControls.start('animate')
+  }
 
   useEffect(() => {
     if (selectedDate) {
@@ -89,7 +96,7 @@ export default function CalenderPage() {
               className='h-6 w-6 text-zinc-500'
               onClick={animatePrevMonth}
             />
-            <motion.span custom="70%" animate={slideControls} variants={slideVariant}>
+            <motion.span custom="70%" animate={calenderControls} variants={slideVariant}>
               {showingMonth.isSame(today, 'year')
                 ? showingMonth.format('MM월')
                 : showingMonth.format('YY년 MM월')}
@@ -117,7 +124,7 @@ export default function CalenderPage() {
           <motion.div
             className='z-10 grid grid-cols-7 text-center text-sm'
             custom="70%"
-            animate={slideControls}
+            animate={calenderControls}
             variants={slideVariant}
           >
             {dayjs.weekdaysShort().map(day => (

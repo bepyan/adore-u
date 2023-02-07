@@ -37,7 +37,10 @@ export const useCalender = () => {
     targetEventList,
     activeTargetEventList,
     setSelectedDate,
-    goToday: () => setShowingMonth(today),
+    goToday: () => {
+      setShowingMonth(today)
+      return showingMonth.isBefore(today)
+    },
     goPrevMonth: () => setShowingMonth(showingMonth.month(showingMonth.month() - 1)),
     goNextMonth: () => setShowingMonth(showingMonth.month(showingMonth.month() + 1)),
   }

@@ -187,6 +187,14 @@ export default function CalenderPage() {
             </motion.div>)}
         </motion.div>
       </div>
+
+      <style jsx global>{`
+        html,
+        body {
+          position: fixed;
+          overflow: hidden;
+        }
+      `}</style>
     </>
   )
 }

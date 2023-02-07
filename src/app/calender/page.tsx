@@ -33,7 +33,23 @@ export default function CalenderPage() {
     goNextMonth()
 
     await controls.start({
-      x: 300,
+      x: '70%',
+      opacity: 0.5,
+      transition: { duration: 0 },
+    })
+
+    await controls.start({
+      x: 0,
+      opacity: 1,
+      transition: { ease: 'easeInOut', duration: 0.15 },
+    })
+  }
+
+  const handlePrev = async () => {
+    goPrevMonth()
+
+    await controls.start({
+      x: '-70%',
       opacity: 0.5,
       transition: { duration: 0 },
     })
@@ -54,13 +70,13 @@ export default function CalenderPage() {
           <div className='flex items-center gap-2'>
             <Icons.caretLeft
               className='h-6 w-6 text-zinc-500'
-              onClick={goPrevMonth}
+              onClick={handlePrev}
             />
-            <span>
+            <motion.span animate={controls}>
               {showingMonth.isSame(today, 'year')
                 ? showingMonth.format('MM월')
                 : showingMonth.format('YY년 MM월')}
-            </span>
+            </motion.span>
             <Icons.caretRight
               className='h-6 w-6 text-zinc-500 active:text-zinc-700'
               onClick={handleNext}

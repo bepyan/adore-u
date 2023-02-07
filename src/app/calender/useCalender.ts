@@ -30,10 +30,6 @@ export const useCalender = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showingMonth])
 
-  const goTargetMonth = (targetDate: dayjs.Dayjs) => {
-    setShowingMonth(targetDate)
-  }
-
   return {
     today,
     showingMonth,
@@ -42,8 +38,8 @@ export const useCalender = () => {
     targetEventList,
     activeTargetEventList,
     setSelectedDate,
-    goToday: () => goTargetMonth(today),
-    goPrevMonth: () => goTargetMonth(showingMonth.month(showingMonth.month() - 1)),
-    goNextMonth: () => goTargetMonth(showingMonth.month(showingMonth.month() + 1)),
+    goToday: () => setShowingMonth(today),
+    goPrevMonth: () => setShowingMonth(showingMonth.month(showingMonth.month() - 1)),
+    goNextMonth: () => setShowingMonth(showingMonth.month(showingMonth.month() + 1)),
   }
 }

@@ -1,9 +1,10 @@
 'use client'
 
-import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
-import React from 'react'
+import { motion, useAnimationControls } from 'framer-motion'
+import React, { useEffect } from 'react'
 import { useMeasure } from 'react-use'
 
+import Button from '~/components/ui/Button'
 import { Icons } from '~/components/ui/Icons'
 import dayjs, { renderDateDuration } from '~/libs/day'
 import { cn } from '~/libs/utils'
@@ -60,6 +61,11 @@ export default function CalenderPage() {
       transition: { ease: 'easeInOut', duration: 0.15 },
     })
   }
+
+  useEffect(() => {
+    if (selectedDate)
+      document.getElementById(selectedDate.format('YYYYMMDD'))?.scrollIntoView({ behavior: 'smooth' })
+  }, [selectedDate])
 
   return (
     <>
@@ -122,7 +128,7 @@ export default function CalenderPage() {
               >
                 <span
                   className={cn(
-                    'flex h-6 w-6 items-center justify-center rounded-full text-zinc-400',
+                    'flex h-6 w-6 items-center justify-center rounded-full text-zinc-300',
                     isCurrentDate && 'bg-zinc-300 text-zinc-700',
                     hasEvent && 'text-zinc-700',
                     isSelectedDate && 'bg-rose-100 text-zinc-700',
@@ -148,15 +154,15 @@ export default function CalenderPage() {
       />}
       {/* events */}
       <div
-        className='fixed-div container inset-x-0 mt-11 overflow-auto pt-8 pb-20 standalone:mt-20 '
+        className='fixed-div container inset-x-0 mt-11 overflow-auto pt-8 pb-24 standalone:mt-20 '
         style={{ top: calenderHeight, height: eventListHeight }}
       >
-        <AnimatePresence>
+        <motion.div animate={{ transition: { staggerChildren: 0.1 } }}>
           {calenderHeight && (
             <motion.div className='flex flex-col gap-4' initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {activeTargetEventList.map(({ itemDate, eventList }) => {
                 return (
-                  <div key={itemDate.toString()}>
+                  <div key={itemDate.toString()} id={itemDate.format('YYYYMMDD')} className="scroll-mt-8">
                     <div className='mb-2 text-sm text-zinc-600'>
                       {itemDate.format('D일 dddd')}
                     </div>
@@ -173,8 +179,13 @@ export default function CalenderPage() {
                   </div>
                 )
               })}
+              <div className='mx-auto'>
+                <Button variant='subtle' onClick={handleNext}>
+                  {selectedDate.add(1, 'month').month() + 1}월 더보기
+                </Button>
+              </div>
             </motion.div>)}
-        </AnimatePresence>
+        </motion.div>
       </div>
     </>
   )

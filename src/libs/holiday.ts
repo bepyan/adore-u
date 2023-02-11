@@ -64,6 +64,8 @@ export const allEventDayList = eventList
     }))
   })
 
+export type EventDay = typeof allEventDayList[number]
+
 export const getHolidays = async () => {
   const url = 'http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getAnniversaryInfo'
 

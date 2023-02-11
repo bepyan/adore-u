@@ -43,7 +43,7 @@ export default function CalenderPage() {
       x: 0,
       transition: {
         ease: 'easeOut',
-        duration: Math.max(0.5 - i * 0.05, 0.2),
+        duration: Math.max(0.3 - i * 0.05, 0.2),
         delay: i * 0.05,
       },
     }))
@@ -52,7 +52,7 @@ export default function CalenderPage() {
       opacity: 1,
       transition: {
         ease: 'easeOut',
-        duration: Math.max(0.5 - i * 0.1, 0),
+        duration: Math.max(0.3 - i * 0.1, 0),
         delay: i * 0.1,
       },
     }))

@@ -29,7 +29,7 @@ export default function CalenderPage() {
   } = useCalender()
 
   const [calenderRef, { height: calenderHeight }] = useMeasure<HTMLDivElement>()
-  const eventListHeight = window.innerHeight - calenderHeight
+  const eventListHeight = typeof window !== 'undefined' ? window.innerHeight - calenderHeight : 0
 
   const contentControls = useAnimationControls()
   const animateContent = async () => {

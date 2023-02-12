@@ -5,74 +5,34 @@ import { useEffect } from 'react'
 import { useMount } from 'react-use'
 
 import Button from '~/components/ui/Button'
-import { renderDateDuration } from '~/libs/day'
+import { renderDateDuration } from '~/libs/dayjs'
 
 import { useAnimateCalender, useAnimateEventList } from './useAnimation'
-import useCalenderStore from './useStore'
+import { useSelectedMonthStore } from './useCalenderStore'
 
 let prevMonth = -1
 
 export default function EventList() {
-  const selectedDate = useCalenderStore(state => state.selectedDate)
-  const activeTargetEventList = useCalenderStore(state => state.computed.activeTargetEventList)
+  const selectedMonth = useSelectedMonthStore(state => state.selectedMonth)
+  const activeTargetEventList = useSelectedMonthStore(state => state.computed.activeTargetEventList)
 
   const { animateNextMonth } = useAnimateCalender()
   const { eventListControls, animateEventList } = useAnimateEventList()
 
   useEffect(() => {
-    document.getElementById(selectedDate.format('YYYYMMDD'))?.scrollIntoView({ behavior: 'smooth' })
-  }, [selectedDate])
+    document.getElementById(selectedMonth.format('YYYYMMDD'))?.scrollIntoView({ behavior: 'smooth' })
+  }, [selectedMonth])
 
   useMount(() => {
     animateEventList()
   })
 
   useEffect(() => {
-    if (selectedDate.month() !== prevMonth) {
+    if (selectedMonth.month() !== prevMonth) {
       animateEventList()
-      prevMonth = selectedDate.month()
+      prevMonth = selectedMonth.month()
     }
-  }, [selectedDate])
-
-  // useEffect(() => {
-  //   if (selectedDate.month() === prevMonth || !contentRef.current)
-  //     return
-
-  //   let dateList: { id: string; top: number }[]
-
-  //   function onResize() {
-  //     dateList = Array.from(
-  //       document.querySelectorAll<HTMLElement>('.date-item'),
-  //     ).map(element => ({ id: element.id, top: element.offsetTop }))
-  //   }
-
-  //   function onScroll() {
-  //     if (!dateList || !contentRef.current)
-  //       return
-
-  //     const SCROLL_MARGIN_TOP = 16
-  //     const top = contentRef.current?.offsetTop + SCROLL_MARGIN_TOP + 1
-
-  //     let current = ''
-
-  //     for (let i = 0; i < dateList.length; i++) {
-  //       if (top >= dateList[i].top)
-  //         current = dateList[i].id
-  //     }
-
-  //     if (current)
-  //       setSelectedDate(dayjs(current))
-  //   }
-
-  //   onResize()
-  //   onScroll()
-  //   contentRef.current?.addEventListener('scroll', onScroll, { capture: true, passive: true })
-  //   contentRef.current?.addEventListener('resize', onResize, { capture: true, passive: true })
-  //   return () => {
-  //     contentRef.current?.removeEventListener('scroll', onScroll, { capture: true })
-  //     contentRef.current?.removeEventListener('resize', onResize, { capture: true })
-  //   }
-  // }, [selectedDate])
+  }, [selectedMonth])
 
   return (
     <div className='flex flex-col gap-4'>
@@ -104,7 +64,7 @@ export default function EventList() {
       })}
       <div className='mx-auto'>
         <Button variant='subtle' onClick={animateNextMonth}>
-          {selectedDate.add(1, 'month').month() + 1}월 더보기
+          {selectedMonth.add(1, 'month').month() + 1}월 더보기
         </Button>
       </div>
     </div>

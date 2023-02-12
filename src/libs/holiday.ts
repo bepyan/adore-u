@@ -1,4 +1,4 @@
-import dayjs from './day'
+import dayjs from './dayjs'
 
 export const holidayList = []
 

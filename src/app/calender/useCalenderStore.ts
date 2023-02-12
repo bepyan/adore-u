@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import dayjs from '~/libs/day'
+import dayjs from '~/libs/dayjs'
 import type { EventDay } from '~/libs/holiday'
 import { allEventDayList } from '~/libs/holiday'
 
@@ -9,35 +9,33 @@ interface TargetEventDay {
   eventList: EventDay[]
 }
 
-interface CalenderStore {
-  today: dayjs.Dayjs
-  selectedDate: dayjs.Dayjs
+interface SelectedMonthStore {
+  selectedMonth: dayjs.Dayjs
   computed: {
     monthStartBlankCnt: number
     monthDateList: dayjs.Dayjs[]
     targetEventList: TargetEventDay[]
     activeTargetEventList: TargetEventDay[]
   }
-  setSelectedDate: (date: dayjs.Dayjs) => void
   goToday: () => void
   goNextMonth: () => void
   goPrevMonth: () => void
 }
 
-const useCalenderStore = create<CalenderStore>((set, get) => ({
-  today: dayjs(),
+export const useSelectedMonthStore = create<SelectedMonthStore>((set, get) => ({
   selectedDate: dayjs(),
+  selectedMonth: dayjs(),
   computed: {
     get monthStartBlankCnt() {
-      return (get().selectedDate.date(0).day() + 1) % 7
+      return (get().selectedMonth.date(0).day() + 1) % 7
     },
     get monthDateList() {
-      const { selectedDate } = get()
-      return [...Array(selectedDate.daysInMonth())].map((_, i) => selectedDate.date(i + 1))
+      const { selectedMonth } = get()
+      return [...Array(selectedMonth.daysInMonth())].map((_, i) => selectedMonth.date(i + 1))
     },
     get targetEventList() {
       return get().computed.monthDateList.map((_, i) => {
-        const itemDate = get().selectedDate.date(i + 1) as dayjs.Dayjs
+        const itemDate = get().selectedMonth.date(i + 1) as dayjs.Dayjs
         const eventList = allEventDayList.filter(({ targetDate }) => targetDate.isSame(itemDate, 'date'))
 
         return {
@@ -50,22 +48,32 @@ const useCalenderStore = create<CalenderStore>((set, get) => ({
       return get().computed.targetEventList.filter(({ eventList }) => eventList.length)
     },
   },
-  setSelectedDate: (date: dayjs.Dayjs) => set(state => ({
-    ...state,
-    selectedDate: date,
-  })),
   goToday: () => set(state => ({
     ...state,
-    selectedDate: get().today,
+    selectedMonth: dayjs(),
+    selectedDate: dayjs(),
   })),
   goNextMonth: () => set(state => ({
     ...state,
-    selectedDate: get().selectedDate.month(get().selectedDate.month() + 1),
-  })),
+    selectedMonth: get().selectedMonth.month(get().selectedMonth.month() + 1),
+  }
+  )),
   goPrevMonth: () => set(state => ({
     ...state,
-    selectedDate: get().selectedDate.month(get().selectedDate.month() - 1),
+    selectedMonth: get().selectedMonth.month(get().selectedMonth.month() - 1),
   })),
 }))
 
-export default useCalenderStore
+interface SelectedDateStore {
+
+  selectedDate: dayjs.Dayjs
+  setSelectedDate: (date: dayjs.Dayjs) => void
+}
+
+export const useSelectedDateStore = create<SelectedDateStore>((set, get) => ({
+  selectedDate: dayjs(),
+  setSelectedDate: (date: dayjs.Dayjs) => set(state => ({
+    ...state,
+    selectedDate: get().selectedDate.date(date.date()),
+  })),
+}))

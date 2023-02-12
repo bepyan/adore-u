@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import HeroCard from '~/components/HeroCard'
 import Button from '~/components/ui/Button'
-import dayjs from '~/libs/day'
+import dayjs from '~/libs/dayjs'
 
 export default function Home() {
   const [fullLanding, setFullLanding] = useState(false)

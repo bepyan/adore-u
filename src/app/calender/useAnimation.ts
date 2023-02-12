@@ -1,13 +1,14 @@
 import { useAnimationControls } from 'framer-motion'
 
-import useCalenderStore from './useStore'
+import dayjs from '~/libs/dayjs'
+
+import { useSelectedDateStore, useSelectedMonthStore } from './useCalenderStore'
 
 export const useAnimateCalender = () => {
-  const today = useCalenderStore(state => state.today)
-  const selectedDate = useCalenderStore(state => state.selectedDate)
-  const goToday = useCalenderStore(state => state.goToday)
-  const goNextMonth = useCalenderStore(state => state.goNextMonth)
-  const goPrevMonth = useCalenderStore(state => state.goPrevMonth)
+  const selectedDate = useSelectedDateStore(state => state.selectedDate)
+  const goToday = useSelectedMonthStore(state => state.goToday)
+  const goNextMonth = useSelectedMonthStore(state => state.goNextMonth)
+  const goPrevMonth = useSelectedMonthStore(state => state.goPrevMonth)
 
   const calenderControls = useAnimationControls()
 
@@ -15,7 +16,7 @@ export const useAnimateCalender = () => {
     calenderControls,
     animateToday: async () => {
       goToday()
-      await calenderControls.start(selectedDate.isBefore(today) ? 'rightEnter' : 'leftEnter')
+      await calenderControls.start(selectedDate.isBefore(dayjs()) ? 'rightEnter' : 'leftEnter')
       await calenderControls.start('animate')
     },
     animatePrevMonth: async () => {

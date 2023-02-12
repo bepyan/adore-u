@@ -1,25 +1,24 @@
 'use client'
 
-import dayjs from 'dayjs'
 import { motion } from 'framer-motion'
 
 import { Icons } from '~/components/ui/Icons'
 import { slideVariant } from '~/libs/animations'
+import dayjs from '~/libs/dayjs'
 import { cn } from '~/libs/utils'
 
 import { useAnimateCalender } from './useAnimation'
-import useCalenderStore from './useStore'
+import { useSelectedDateStore, useSelectedMonthStore } from './useCalenderStore'
 
 export default function Calender() {
   const {
-    today,
-    selectedDate,
+    selectedMonth,
     computed: {
       monthStartBlankCnt,
       targetEventList,
     },
-    setSelectedDate,
-  } = useCalenderStore()
+  } = useSelectedMonthStore()
+  const { selectedDate, setSelectedDate } = useSelectedDateStore()
 
   const { calenderControls, animateToday, animateNextMonth, animatePrevMonth } = useAnimateCalender()
 
@@ -32,9 +31,9 @@ export default function Calender() {
           onClick={animatePrevMonth}
         />
         <motion.span animate={calenderControls} variants={slideVariant}>
-          {selectedDate.isSame(today, 'year')
-            ? selectedDate.format('MM월')
-            : selectedDate.format('YY년 MM월')}
+          {selectedMonth.isSame(dayjs(), 'year')
+            ? selectedMonth.format('MM월')
+            : selectedMonth.format('YY년 MM월')}
         </motion.span>
         <Icons.caretRight
           className='h-6 w-6 text-zinc-500 active:text-zinc-700'
@@ -71,7 +70,7 @@ export default function Calender() {
           </div>
         ))}
         {targetEventList.map(({ itemDate, eventList }) => {
-          const isCurrentDate = itemDate.isSame(today, 'D')
+          const isCurrentDate = itemDate.isSame(dayjs(), 'D')
           const isSelectedDate = itemDate.isSame(selectedDate, 'D')
           const hasEvent = Boolean(eventList.length)
 

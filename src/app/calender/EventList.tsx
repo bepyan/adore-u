@@ -19,10 +19,6 @@ export default function EventList() {
   const { animateNextMonth } = useAnimateCalender()
   const { eventListControls, animateEventList } = useAnimateEventList()
 
-  useEffect(() => {
-    document.getElementById(selectedMonth.format('YYYYMMDD'))?.scrollIntoView({ behavior: 'smooth' })
-  }, [selectedMonth])
-
   useMount(() => {
     animateEventList()
   })

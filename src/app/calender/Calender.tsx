@@ -11,14 +11,12 @@ import { useAnimateCalender } from './useAnimation'
 import { useSelectedDateStore, useSelectedMonthStore } from './useCalenderStore'
 
 export default function Calender() {
-  const {
-    selectedMonth,
-    computed: {
-      monthStartBlankCnt,
-      targetEventList,
-    },
-  } = useSelectedMonthStore()
-  const { selectedDate, setSelectedDate } = useSelectedDateStore()
+  const selectedMonth = useSelectedMonthStore(state => state.selectedMonth)
+  const monthStartBlankCnt = useSelectedMonthStore(state => state.computed.monthStartBlankCnt)
+  const targetEventList = useSelectedMonthStore(state => state.computed.targetEventList)
+
+  const selectedDate = useSelectedDateStore(state => state.selectedDate)
+  const onClickDate = useSelectedDateStore(state => state.setSelectedDateWithScroll)
 
   const { calenderControls, animateToday, animateNextMonth, animatePrevMonth } = useAnimateCalender()
 
@@ -78,7 +76,7 @@ export default function Calender() {
             <div
               key={itemDate.toString()}
               className={'flex h-16 flex-col items-center justify-center gap-1 text-zinc-700'}
-              onClick={() => hasEvent && setSelectedDate(itemDate)}
+              onClick={() => hasEvent && onClickDate(itemDate)}
             >
               <span
                 className={cn(
